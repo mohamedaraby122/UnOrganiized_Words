@@ -132,12 +132,8 @@ public class GamManager : MonoBehaviour
         WinPanel.SetActive(false);
         ResetWordsInGameOver();
             timeLeft = tempTime + 9;
-        CurrentImage.sprite = null;
-        foreach (GameObject i in WordslevelsPanel)
-        {
-            i.SetActive(false);
-        }
-        currentWordNumber = 0;
+        HideAllTheWordsAndShowCurrentWords();
+         currentWordNumber = 0;
     }
     public void WinPanl()
     {
