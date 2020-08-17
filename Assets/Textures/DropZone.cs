@@ -25,8 +25,9 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
             print(drag.gameObject.GetComponent<WordNumber>().number);
 
             drag.parentToReturnTo = this.transform;
+            drag.gameObject.SetActive(false);
         }
-        drag.gameObject.SetActive(false);
+
 
     }
 

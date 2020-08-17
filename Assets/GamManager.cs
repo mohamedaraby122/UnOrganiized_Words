@@ -25,9 +25,13 @@ public class GamManager : MonoBehaviour
     public Text scoreText;
     public int score = 0;
     public CanvasGroup _MianBoard;
+    /*****************************************************************/
+    public AudioSource audioSource;
+    public AudioClip clickClip;
+    public AudioClip winClip;
+    public AudioClip LoseClip;
 
-
-     private static GamManager _instance;
+    private static GamManager _instance;
 
         public static GamManager Instance { get { return _instance; } }
 
@@ -55,20 +59,23 @@ public class GamManager : MonoBehaviour
             currentLevel = 0;
             print("hhh");
         }
-        HideAllTheWordsAndShowCurrentWords();
-        CurrentImage.sprite = LevelsImages[currentLevel];
-        WordslevelsPanel[currentLevel].SetActive(true);
+       // HideAllTheWordsAndShowCurrentWords();
+       // CurrentImage.sprite = LevelsImages[currentLevel];
+       // WordslevelsPanel[currentLevel].SetActive(true);
         ArrangedParent = WordslevelsPanel[currentLevel].transform.GetChild(0);
         UnArrangedParent = WordslevelsPanel[currentLevel].transform.GetChild(1);
     }
     public void OnClicImage(GameObject img)
     {
+       
         if (!CheckIsHeIsRight(img))
         {
             //He Is un Correct
             GameOver();
             return;
         }
+        audioSource.clip = clickClip;
+        audioSource.Play();
         if (img.transform.parent == ArrangedParent)
         {
             img.transform.parent = UnArrangedParent.transform;
@@ -117,23 +124,36 @@ public class GamManager : MonoBehaviour
 
     public void GameOver()
     {
+        audioSource.clip = LoseClip;
+        audioSource.Play();
         score = 0;
         scoreText.text = score + " Points";
         GameOverPanel.SetActive(true);
         WinPanel.SetActive(false);
         ResetWordsInGameOver();
             timeLeft = tempTime + 9;
+        CurrentImage.sprite = null;
+        foreach (GameObject i in WordslevelsPanel)
+        {
+            i.SetActive(false);
+        }
         currentWordNumber = 0;
     }
     public void WinPanl()
     {
+        audioSource.clip = winClip;
+        audioSource.Play();
         winnerText.text = finalSentens[currentLevel];
         WinPanel.SetActive(true);
         GameOverPanel.SetActive(false);
         score++;
         scoreText.text = score + " Points";
         ResetWordsInGameOver();
-
+        CurrentImage.sprite = null;
+        foreach (GameObject i in WordslevelsPanel)
+        {
+            i.SetActive(false);
+        }
         if (currentLevel == maxLevel)
         {
             //Reach the final Question (repeat ) 
@@ -143,8 +163,8 @@ public class GamManager : MonoBehaviour
         // PlayerPrefs.SetInt("level", currentLevel);
 
         timeLeft = tempTime + 9;
-        HideAllTheWordsAndShowCurrentWords();
-        CurrentImage.sprite = LevelsImages[currentLevel];
+      ////  HideAllTheWordsAndShowCurrentWords();
+       // CurrentImage.sprite = LevelsImages[currentLevel];
         currentWordNumber = 0;
 
 
