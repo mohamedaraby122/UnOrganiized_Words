@@ -24,7 +24,26 @@ public class GamManager : MonoBehaviour
     public string[] finalSentens;
     public Text scoreText;
     public int score = 0;
+    public CanvasGroup _MianBoard;
 
+
+     private static GamManager _instance;
+
+        public static GamManager Instance { get { return _instance; } }
+
+
+        private void Awake()
+        {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
+        }
+    
     private void Start()
     {
         currentWordNumber = 0;
@@ -113,18 +132,26 @@ public class GamManager : MonoBehaviour
         GameOverPanel.SetActive(false);
         score++;
         scoreText.text = score + " Points";
+        ResetWordsInGameOver();
+
         if (currentLevel == maxLevel)
         {
             //Reach the final Question (repeat ) 
             return;
         }
-        currentLevel++;
-       // PlayerPrefs.SetInt("level", currentLevel);
+        // currentLevel++;
+        // PlayerPrefs.SetInt("level", currentLevel);
+
         timeLeft = tempTime + 9;
         HideAllTheWordsAndShowCurrentWords();
         CurrentImage.sprite = LevelsImages[currentLevel];
         currentWordNumber = 0;
 
+
+    }
+   public void  ActivateMainBoardBlockRayCaster()
+    {
+        _MianBoard.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
     }
     public void HideAllTheWordsAndShowCurrentWords()
@@ -146,5 +173,14 @@ public class GamManager : MonoBehaviour
             ArrangedParent.GetChild(i).transform.SetParent(UnArrangedParent);
         }
     }
-   
+
+    public void SetCurrentLevel(int level)
+    {
+        print("Change Level");
+        currentLevel = level;
+        timeLeft = tempTime + 9;
+        HideAllTheWordsAndShowCurrentWords();
+        CurrentImage.sprite = LevelsImages[currentLevel];
+        currentWordNumber = 0;
+    }
 }
